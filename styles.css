@@ -1,0 +1,1342 @@
+/* ============================================
+   CSS Variables
+   ============================================ */
+:root {
+  --band-pos: 40px;
+  --band-height: 72px;
+  --noise-opacity: 0.85;
+  --flicker: 1;
+}
+
+/* ============================================
+   Reset & Base Styles
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: none;
+  outline: none;
+}
+
+body {
+  background: #000;
+  color: #ddd;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* ============================================
+   Layout Wrapper
+   ============================================ */
+.content {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.wrap {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* ============================================
+   VHS Frame Container
+   ============================================ */
+.vhs {
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.6);
+  border: none !important;
+  outline: none !important;
+  animation: subtleFlicker 3s infinite;
+}
+
+/* Subtle VHS noise overlay */
+.vhs::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(transparent,
+      transparent 1px,
+      rgba(255, 255, 255, 0.015) 1px,
+      rgba(255, 255, 255, 0.015) 2px);
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+  transform: translateZ(0);
+}
+
+/* Scanlines */
+.vhs::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(180deg,
+      rgba(0, 0, 0, 0.12) 0 2px,
+      rgba(255, 255, 255, 0.02) 2px 4px);
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+}
+
+/* ============================================
+   VHS Content Area
+   ============================================ */
+.vhs .content {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  letter-spacing: 4px;
+  font-size: clamp(24px, 8vw, 112px);
+  color: #d9d9ff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(90deg, #16213e, #2b2b5a 40%, #1a2d3d 100%);
+  background-size: 200% 200%;
+  animation: bgShift 12s linear infinite;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 100px 40px 40px;
+  box-sizing: border-box;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+/* Home logo styling */
+.home-logo {
+  max-width: 80%;
+  max-height: 70vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Mobile: ensure logo is centered */
+@media (max-width: 600px) {
+  .home-logo {
+    max-width: 90%;
+    max-height: 60vh;
+    margin: 0 auto;
+  }
+  
+  .vhs .content:has(.home-logo) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* Override alignment for tour, music, about, and contact pages */
+.vhs .content:has(.tour-container),
+.vhs .content:has(.music-container),
+.vhs .content:has(.about-container),
+.vhs .content:has(.contact-container) {
+  align-items: flex-start;
+  padding-top: 100px;
+}
+
+/* Mobile: reduce top padding */
+@media (max-width: 600px) {
+  .vhs .content:has(.tour-container),
+  .vhs .content:has(.music-container),
+  .vhs .content:has(.about-container),
+  .vhs .content:has(.contact-container) {
+    padding-top: 10px;
+  }
+}
+
+/* Extra bottom padding for about page */
+.vhs .content:has(.about-container) {
+  padding-bottom: 20px;
+}
+
+/* ============================================
+   Tour Dates
+   ============================================ */
+.tour-container {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  margin-top: 0;
+  padding-top: 60px; /* Nav is at 20px + ~40px height = 60px, start below it with some space */
+}
+
+.tour-title {
+  font-size: clamp(24px, 8vw, 112px);
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #d9d9ff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+.tour-dates-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding-bottom: 80px;
+}
+
+.tour-date-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(217, 217, 255, 0.3);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  gap: 20px;
+}
+
+/* Responsive layout for tour items on small screens */
+@media (max-width: 600px) {
+  .tour-date-item {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .tour-date-info {
+    align-items: center;
+    text-align: center;
+  }
+
+  .tour-link {
+    align-self: center;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.tour-date-item:hover {
+  border-color: rgba(217, 217, 255, 0.6);
+  background: rgba(0, 0, 0, 0.6);
+  transform: translateX(5px);
+}
+
+.tour-date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tour-date {
+  font-size: clamp(16px, 2.5vw, 32px);
+  font-weight: 700;
+  color: #d9d9ff;
+  text-shadow: 0 0 10px rgba(217, 217, 255, 0.5);
+}
+
+.tour-venue {
+  font-size: clamp(14px, 2vw, 24px);
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.tour-city {
+  font-size: clamp(12px, 1.5vw, 20px);
+  color: #ccc;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.tour-link {
+  font-size: clamp(14px, 2vw, 24px);
+  font-weight: 700;
+  color: #ff0000;
+  text-decoration: none;
+  padding: 12px 24px;
+  border: 2px solid #ff0000;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  letter-spacing: 2px;
+}
+
+.tour-link:hover {
+  background: rgba(255, 0, 0, 0.2);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+  transform: scale(1.05);
+}
+
+.no-dates {
+  font-size: 48px;
+  color: #d9d9ff;
+  text-shadow: 0 0 10px rgba(217, 217, 255, 0.5);
+  text-align: center;
+  padding: 40px;
+}
+
+/* ============================================
+   Music Releases
+   ============================================ */
+.music-container {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  margin-top: 0;
+  padding-top: 60px;
+}
+
+.music-title {
+  font-size: clamp(24px, 8vw, 112px);
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #d9d9ff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+.music-releases-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-bottom: 80px;
+}
+
+.music-release-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(217, 217, 255, 0.3);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.music-release-item:hover {
+  border-color: rgba(217, 217, 255, 0.6);
+  background: rgba(0, 0, 0, 0.6);
+  transform: translateY(-5px);
+}
+
+.music-artwork {
+  width: 100%;
+  max-width: 400px;
+}
+
+.music-artwork img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 2px solid rgba(217, 217, 255, 0.2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.music-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.music-release-title {
+  font-size: clamp(20px, 3vw, 36px);
+  font-weight: 700;
+  color: #d9ebff;
+  text-shadow: 0 0 10px rgba(217, 217, 255, 0.5);
+  margin: 0;
+}
+
+.music-release-date {
+  font-size: clamp(14px, 1.8vw, 20px);
+  color: #ccc;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+  margin: 0;
+}
+
+.music-link {
+  font-size: clamp(16px, 2vw, 24px);
+  font-weight: 700;
+  color: #ff0000;
+  text-decoration: none;
+  padding: 12px 24px;
+  border: 2px solid #ff0000;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  letter-spacing: 2px;
+  margin-top: 10px;
+}
+
+.music-link:hover {
+  background: rgba(255, 0, 0, 0.2);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+  transform: scale(1.05);
+}
+
+.no-releases {
+  font-size: clamp(24px, 4vw, 48px);
+  color: #d9d9ff;
+  text-shadow: 0 0 10px rgba(217, 217, 255, 0.5);
+  text-align: center;
+  padding: 40px;
+}
+
+/* Responsive layout for music items on small screens */
+@media (max-width: 600px) {
+  .music-release-item {
+    padding: 20px;
+  }
+
+  .music-artwork {
+    max-width: 100%;
+  }
+}
+
+/* ============================================
+   About Page
+   ============================================ */
+.about-container {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  margin-top: 0;
+  padding-top: 60px;
+  padding-bottom: 80px;
+}
+
+.about-title {
+  font-size: clamp(24px, 8vw, 112px);
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #d9d9ff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+.about-content {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  padding-bottom: 210px;
+  align-items: flex-start;
+}
+
+.about-image {
+  flex: 0 0 auto;
+  width: 300px;
+  max-width: 100%;
+}
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 2px solid rgba(217, 217, 255, 0.2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.about-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.about-text p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #fff;
+  margin: 0;
+  text-align: left;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Responsive layout for about content on small screens */
+@media (max-width: 600px) {
+  .about-content {
+    flex-direction: column;
+    padding: 0 20px;
+  }
+
+  .about-image {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .about-text p {
+    text-align: left;
+  }
+}
+
+/* ============================================
+   Contact Page
+   ============================================ */
+.contact-container {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  margin-top: 0;
+  padding-top: 60px;
+  padding-bottom: 80px;
+}
+
+.contact-title {
+  font-size: clamp(24px, 8vw, 112px);
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #d9d9ff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+.contact-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 80px;
+}
+
+.contact-text {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-label {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  color: #d9d9ff;
+  text-shadow: 0 0 10px rgba(217, 217, 255, 0.5);
+  margin: 0 0 8px 0;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  letter-spacing: 1px;
+}
+
+.contact-name {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-weight: 500;
+}
+
+.contact-email {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #ccc;
+  margin: 0;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: inline-block;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.contact-email:hover {
+  color: #d9d9ff;
+  text-shadow: 0 0 5px rgba(217, 217, 255, 0.5);
+}
+
+.contact-text p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.contact-text p strong {
+  font-weight: 600;
+}
+
+.contact-text .contact-area {
+  font-size: 24px;
+  font-weight: 700;
+  color: #d9d9ff;
+  text-shadow: 0 0 10px rgba(217, 217, 255, 0.5);
+  margin: 0 0 8px 0;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  letter-spacing: 1px;
+}
+
+/* Responsive layout for contact content on small screens */
+@media (max-width: 600px) {
+  .contact-content {
+    padding: 0 20px;
+  }
+
+  .contact-label,
+  .contact-name,
+  .contact-email,
+  .contact-text p {
+    text-align: center;
+  }
+
+  .contact-email {
+    word-break: break-all;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    display: block;
+  }
+}
+
+/* ============================================
+   Head Switching Snow Band
+   ============================================ */
+.snow-band {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: var(--band-height);
+  bottom: calc(-1 * var(--band-height) + var(--band-pos));
+  z-index: 6;
+  pointer-events: none;
+  overflow: hidden;
+  transform: translateZ(0);
+  filter: contrast(120%) saturate(120%);
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  mix-blend-mode: screen;
+  opacity: var(--noise-opacity);
+  background-image:
+    linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0.5px, rgba(0, 0, 0, 0.02) 0.6px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, rgba(255, 255, 255, 0) 1px 3px);
+  animation: noiseShift 0.12s steps(3) infinite;
+}
+
+.tear {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  top: 40%;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.0), rgba(255, 255, 255, 0.35), rgba(0, 0, 0, 0.0));
+  filter: blur(0.4px);
+  opacity: 0.6;
+  animation: tearShift 1.1s linear infinite;
+}
+
+/* Chromatic offset ghosting */
+.ghost {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: calc(var(--band-height) * 1.6);
+  bottom: calc(-1 * var(--band-height) + var(--band-pos) - 6px);
+  z-index: 5;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.45;
+  filter: blur(1px) saturate(130%);
+  background: linear-gradient(90deg, rgba(255, 0, 50, 0.08), rgba(0, 255, 200, 0.06));
+  transform: translateX(-6px);
+  animation: ghostWobble 1.8s ease-in-out infinite;
+}
+
+/* ============================================
+   Camcorder Frame (White Borders)
+   ============================================ */
+.camcorder-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 101;
+}
+
+.frame-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+}
+
+.frame-bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+}
+
+.frame-left {
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.frame-right {
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.corner {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #fff;
+  z-index: 102;
+}
+
+.corner-tl {
+  top: 8px;
+  left: 8px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner-tr {
+  top: 8px;
+  right: 8px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.corner-bl {
+  bottom: 8px;
+  left: 8px;
+  border-right: none;
+  border-top: none;
+}
+
+.corner-br {
+  bottom: 8px;
+  right: 8px;
+  border-left: none;
+  border-top: none;
+}
+
+/* ============================================
+   Navigation
+   ============================================ */
+.main-nav {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 30px;
+  z-index: 101;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.nav-link {
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  text-decoration: none;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  opacity: 0.7;
+}
+
+.nav-link.active {
+  opacity: 1;
+  color: #d9d9ff;
+  text-shadow: 0 0 15px rgba(217, 217, 255, 0.8), 0 0 30px rgba(217, 217, 255, 0.4);
+  position: relative;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #d9d9ff, transparent);
+  box-shadow: 0 0 10px rgba(217, 217, 255, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scaleX(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+/* Hamburger Menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 102;
+  position: relative;
+}
+
+.hamburger span {
+  width: 100%;
+  height: 3px;
+  background: #fff;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .main-nav {
+    right: 20px;
+    left: auto;
+    transform: none;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(90deg, #16213e, #2b2b5a 40%, #1a2d3d 100%);
+    background-size: 200% 200%;
+    animation: bgShift 12s linear infinite;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 99;
+    overflow: hidden;
+  }
+
+  .nav-links::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      transparent,
+      transparent 1px,
+      rgba(255, 255, 255, 0.015) 1px,
+      rgba(255, 255, 255, 0.015) 2px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+  }
+
+  .nav-links::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.12) 0 2px,
+      rgba(255, 255, 255, 0.02) 2px 4px
+    );
+    mix-blend-mode: multiply;
+    opacity: 0.9;
+  }
+
+  .nav-links.active {
+    transform: translateX(0);
+  }
+
+  .nav-link {
+    font-size: 36px;
+    padding: 10px 0;
+    position: relative;
+    z-index: 3;
+  }
+
+  .nav-link.active {
+    color: #d9d9ff;
+    text-shadow: 0 0 15px rgba(217, 217, 255, 0.8), 0 0 30px rgba(217, 217, 255, 0.4);
+  }
+
+  .nav-link.active::after {
+    bottom: 5px;
+  }
+
+  .hamburger {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    left: auto;
+    z-index: 102;
+  }
+}
+
+/* ============================================
+   REC Button
+   ============================================ */
+.rec-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 101;
+}
+
+.rec-indicator {
+  width: 24px;
+  height: 24px;
+  background: #ff0000;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #ff0000;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.rec-text {
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+/* ============================================
+   Date Display
+   ============================================ */
+.date-display {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: #fff;
+  font-size: 28px;
+  z-index: 101;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   Transition Snow Overlay
+   ============================================ */
+.transition-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.transition-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.transition-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    repeating-linear-gradient(0deg,
+      transparent,
+      transparent 1px,
+      rgba(255, 255, 255, 0.3) 1px,
+      rgba(255, 255, 255, 0.3) 2px,
+      transparent 2px,
+      transparent 3px,
+      rgba(255, 255, 255, 0.25) 3px,
+      rgba(255, 255, 255, 0.25) 4px),
+    repeating-linear-gradient(90deg,
+      transparent,
+      transparent 1px,
+      rgba(255, 255, 255, 0.28) 1px,
+      rgba(255, 255, 255, 0.28) 2px,
+      transparent 2px,
+      transparent 3px,
+      rgba(255, 255, 255, 0.22) 3px,
+      rgba(255, 255, 255, 0.22) 4px);
+  background-size: 100% 100%, 100% 100%;
+  animation: transitionSnow 0.05s linear infinite;
+  mix-blend-mode: screen;
+}
+
+.transition-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 30%),
+    radial-gradient(ellipse at 80% 70%, rgba(255, 255, 255, 0.12) 0%, transparent 30%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.18) 0%, transparent 40%);
+  background-size: 150% 150%, 150% 150%, 200% 200%;
+  animation: transitionNoise 0.1s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+@keyframes transitionSnow {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+
+  100% {
+    background-position: 0 10px, 10px 0;
+  }
+}
+
+@keyframes transitionNoise {
+
+  0%,
+  100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+  }
+
+  50% {
+    background-position: 100% 100%, 0% 0%, 30% 70%;
+  }
+}
+
+.transition-overlay.fade-in {
+  animation: fadeInTransition 1.5s ease-in-out;
+}
+
+@keyframes fadeInTransition {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   Glitch Effect
+   ============================================ */
+.glitch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  animation: glitch-trigger 8s infinite;
+}
+
+.glitch::before,
+.glitch::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.glitch::before {
+  background: linear-gradient(transparent 50%,
+      rgba(255, 0, 0, 0.1) 50%);
+  background-size: 100% 4px;
+  animation: scanline 0.1s linear infinite;
+}
+
+.glitch::after {
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 255, 0.1) 2px,
+      rgba(0, 255, 255, 0.1) 4px);
+  mix-blend-mode: difference;
+}
+
+.glitch-distort {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(0deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      transparent 1px,
+      transparent 2px,
+      rgba(255, 255, 255, 0.05) 3px);
+  pointer-events: none;
+  z-index: 21;
+  opacity: 0;
+  animation: glitch-distort 8s infinite;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes subtleFlicker {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.99;
+  }
+}
+
+@keyframes bgShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes noiseShift {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 0 10px;
+  }
+}
+
+@keyframes tearShift {
+  0% {
+    transform: translateY(-50%) translateX(-100%);
+  }
+
+  100% {
+    transform: translateY(-50%) translateX(100%);
+  }
+}
+
+@keyframes ghostWobble {
+
+  0%,
+  100% {
+    transform: translateX(-6px);
+  }
+
+  50% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes glitch-trigger {
+
+  0%,
+  90%,
+  100% {
+    opacity: 0;
+  }
+
+  91% {
+    opacity: 1;
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+
+  92% {
+    opacity: 1;
+    transform: translate(-2px, 2px);
+    filter: hue-rotate(90deg) brightness(1.2);
+  }
+
+  93% {
+    opacity: 1;
+    transform: translate(2px, -2px);
+    filter: hue-rotate(-90deg) brightness(0.8);
+  }
+
+  94% {
+    opacity: 1;
+    transform: translate(-2px, -2px);
+    filter: hue-rotate(180deg) brightness(1.5);
+  }
+
+  95% {
+    opacity: 1;
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+
+  96% {
+    opacity: 0.8;
+    transform: translate(1px, 1px);
+    filter: hue-rotate(45deg) brightness(1.1);
+  }
+
+  97% {
+    opacity: 0;
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(4px);
+  }
+}
+
+@keyframes glitch-distort {
+
+  0%,
+  90%,
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+
+  91%,
+  96% {
+    opacity: 1;
+    transform: scaleY(1.02);
+  }
+
+  92% {
+    transform: scaleY(0.98);
+  }
+
+  93% {
+    transform: scaleY(1.05);
+  }
+
+  94% {
+    transform: scaleY(0.95);
+  }
+
+  95% {
+    transform: scaleY(1.01);
+  }
+}

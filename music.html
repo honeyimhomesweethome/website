@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music - Honey I'm Home</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="content">
+    <div class="wrap">
+      <!-- VHS frame -->
+      <div class="vhs" id="vhs">
+        <!-- Camcorder frame -->
+        <div class="camcorder-frame">
+          <div class="frame-border frame-top"></div>
+          <div class="frame-border frame-bottom"></div>
+          <div class="frame-border frame-left"></div>
+          <div class="frame-border frame-right"></div>
+        </div>
+        
+        <!-- Corners (outside camcorder-frame to ensure proper z-index) -->
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+
+        <!-- Content -->
+        <div class="content" id="pageContent">
+          <div class="music-container">
+            <h1 class="music-title">MUSIC</h1>
+            <div class="music-releases-list" id="musicReleasesList"></div>
+          </div>
+        </div>
+
+        <!-- Transition Snow Overlay -->
+        <div class="transition-overlay" id="transitionOverlay"></div>
+
+        <!-- Ghost -->
+        <div class="ghost" aria-hidden="true"></div>
+
+        <!-- Snow band -->
+        <div class="snow-band" id="band" aria-hidden="true">
+          <div class="grain"></div>
+          <div class="tear"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="main-nav">
+          <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div class="nav-links" id="navLinks">
+            <a href="index.html" class="nav-link" data-page="home">Home</a>
+            <a href="tour.html" class="nav-link" data-page="tour">Tour</a>
+            <a href="music.html" class="nav-link" data-page="music">Music</a>
+            <a href="about.html" class="nav-link" data-page="about">About</a>
+            <a href="contact.html" class="nav-link" data-page="contact">Contact</a>
+          </div>
+        </nav>
+
+        <!-- REC Button -->
+        <div class="rec-button">
+          <div class="rec-indicator"></div>
+          <span class="rec-text">REC</span>
+        </div>
+
+        <!-- Date display -->
+        <div class="date-display" id="dateDisplay"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="music-data.js"></script>
+  <script>
+    // Update date display
+    function updateDate() {
+      const now = new Date();
+      const options = {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      };
+      const dateString = now.toLocaleDateString('en-US', options);
+      document.getElementById('dateDisplay').textContent = dateString;
+    }
+
+    // Update immediately and then every second
+    updateDate();
+    setInterval(updateDate, 1000);
+
+    // Mark active nav link
+    function setActiveNavLink() {
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-link').forEach(link => {
+        const linkPage = link.getAttribute('href');
+        if (linkPage === currentPage || (currentPage === '' && linkPage === 'index.html')) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+    setActiveNavLink();
+
+    // Display music releases
+    function displayMusicReleases() {
+      const container = document.getElementById('musicReleasesList');
+      
+      if (!musicReleases || musicReleases.length === 0) {
+        container.innerHTML = '<p class="no-releases">No releases available</p>';
+        return;
+      }
+
+      // Sort releases by release date (newest first)
+      const sortedReleases = [...musicReleases].sort((a, b) => {
+        const dateA = a.releaseDate ? new Date(a.releaseDate) : new Date(0);
+        const dateB = b.releaseDate ? new Date(b.releaseDate) : new Date(0);
+        return dateB - dateA; // Descending order (newest first)
+      });
+
+      container.innerHTML = sortedReleases.map(release => {
+        const releaseDate = release.releaseDate ? formatReleaseDate(release.releaseDate) : '';
+        return `
+          <div class="music-release-item">
+            <div class="music-artwork">
+              <img src="${release.artwork}" alt="${release.title}" />
+            </div>
+            <div class="music-info">
+              <h2 class="music-release-title">${release.title}</h2>
+              ${releaseDate ? `<p class="music-release-date">${releaseDate}</p>` : ''}
+              <a href="${release.spotifyLink}" target="_blank" class="music-link">STREAM HERE</a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Load music releases when page loads
+    window.addEventListener('load', function() {
+      displayMusicReleases();
+    });
+
+    // Navigation with VHS transition
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetUrl = this.getAttribute('href');
+
+        if (targetUrl === '#' || targetUrl === window.location.pathname.split('/').pop()) {
+          return; // Don't transition if clicking current page or placeholder
+        }
+
+        const overlay = document.getElementById('transitionOverlay');
+
+        // Fade out with snow effect
+        overlay.classList.add('active');
+
+        setTimeout(() => {
+          // Navigate to new page after transition
+          if (targetUrl) {
+            window.location.href = targetUrl;
+          }
+        }, 1500); // Match transition duration
+      });
+    });
+
+    // Fade in on page load
+    window.addEventListener('load', function () {
+      const overlay = document.getElementById('transitionOverlay');
+      overlay.classList.add('fade-in');
+      setTimeout(() => {
+        overlay.classList.remove('active', 'fade-in');
+      }, 1500);
+    });
+
+    // Mobile hamburger menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (hamburger && navLinks) {
+      hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+      });
+
+      // Close menu when clicking a nav link on mobile
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+          hamburger.classList.remove('active');
+          navLinks.classList.remove('active');
+        });
+      });
+    }
+  </script>
+</body>
+
+</html>
