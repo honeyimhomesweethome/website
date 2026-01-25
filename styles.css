@@ -244,8 +244,14 @@ body {
   }
 
   .tour-date-info {
-    align-items: center;
-    text-align: center;
+    align-items: center !important;
+    text-align: center !important;
+  }
+  
+  .tour-date,
+  .tour-venue,
+  .tour-city {
+    text-align: center !important;
   }
 
   .tour-link {
@@ -265,6 +271,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .tour-date {
@@ -312,6 +320,135 @@ body {
   text-shadow: 0 0 10px rgba(217, 217, 255, 0.5);
   text-align: center;
   padding: 40px;
+}
+
+/* ============================================
+   Bandsintown Widget (tour2.html)
+   ============================================ */
+.tour2-page #tourDatesList .bit-widget-initializer,
+.tour2-page #tourDatesList .bit-widget-container,
+.tour2-page #tourDatesList #bit-events {
+  display: none !important; /* prevent flash before our custom render */
+}
+
+.tour2-page #tourDatesList .bit-widget-container {
+  font-family: inherit !important;
+  background: transparent !important;
+  color: #d9d9ff !important;
+  text-align: left !important;
+}
+
+.tour2-page #tourDatesList .bit-widget-container * {
+  font-family: inherit !important;
+}
+
+.tour2-page #tourDatesList .bit-widget-container a {
+  color: #ff0000 !important;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
+}
+
+/* Hide widget chrome we don't use on tour.html (best-effort; classnames may vary). */
+.tour2-page #tourDatesList .bit-widget-container .bit-widget-header,
+.tour2-page #tourDatesList .bit-widget-container .bit-header,
+.tour2-page #tourDatesList .bit-widget-container .bit-follow,
+.tour2-page #tourDatesList .bit-widget-container .bit-follow-section,
+.tour2-page #tourDatesList .bit-widget-container .bit-logo,
+.tour2-page #tourDatesList .bit-widget-container .bit-tracking,
+.tour2-page #tourDatesList .bit-widget-container .bit-play-my-city {
+  display: none !important;
+}
+
+/* Events list layout: text left, button right (works for both div-based + table-based renders). */
+.tour2-page #tourDatesList .bit-widget-container .bit-event,
+.tour2-page #tourDatesList .bit-widget-container .bit-event-row,
+.tour2-page #tourDatesList .bit-widget-container .bit-event-item,
+.tour2-page #tourDatesList #bit-events tbody tr {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 20px !important;
+  padding: 20px 30px !important;
+  margin: 0 0 30px 0 !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 2px solid rgba(217, 217, 255, 0.3) !important;
+  backdrop-filter: blur(5px) !important;
+  transition: all 0.3s ease !important;
+  box-sizing: border-box !important;
+}
+
+.tour2-page #tourDatesList .bit-widget-container .bit-event:hover,
+.tour2-page #tourDatesList .bit-widget-container .bit-event-row:hover,
+.tour2-page #tourDatesList .bit-widget-container .bit-event-item:hover,
+.tour2-page #tourDatesList #bit-events tbody tr:hover {
+  border-color: rgba(217, 217, 255, 0.6) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  transform: translateX(5px) !important;
+}
+
+/* Left column (date/venue/city). */
+.tour2-page #tourDatesList .bit-widget-container .bit-details,
+.tour2-page #tourDatesList .bit-widget-container .bit-event-details,
+.tour2-page #tourDatesList .bit-widget-container .bit-event-info,
+.tour2-page #tourDatesList #bit-events tbody tr > *:not(.bit-tickets):not(.bit-rsvp):not(.bit-offers) {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  text-align: left !important;
+}
+
+/* Right column (ticket CTA). */
+.tour2-page #tourDatesList .bit-widget-container .bit-offers,
+.tour2-page #tourDatesList .bit-widget-container .bit-buttons,
+.tour2-page #tourDatesList .bit-widget-container .bit-event-buttons,
+.tour2-page #tourDatesList #bit-events .bit-tickets {
+  flex: 0 0 auto !important;
+  margin-left: auto !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+
+/* Ticket button styling (best-effort; classnames may vary). */
+.tour2-page #tourDatesList .bit-widget-container .bit-button,
+.tour2-page #tourDatesList .bit-widget-container .bit-uiButton,
+.tour2-page #tourDatesList .bit-widget-container a[class*="ticket"],
+.tour2-page #tourDatesList #bit-events a {
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  text-decoration: none !important;
+}
+
+.tour2-page #tourDatesList .bit-widget-container .bit-button,
+.tour2-page #tourDatesList .bit-widget-container .bit-uiButton,
+.tour2-page #tourDatesList .bit-widget-container a[class*="ticket"] {
+  color: #ff0000 !important;
+  background: rgba(0, 0, 0, 0) !important;
+  border: 2px solid #ff0000 !important;
+  padding: 12px 24px !important;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.3) !important;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
+  transition: all 0.3s ease !important;
+  display: inline-block !important;
+}
+
+.tour2-page #tourDatesList .bit-widget-container .bit-button:hover,
+.tour2-page #tourDatesList .bit-widget-container .bit-uiButton:hover,
+.tour2-page #tourDatesList .bit-widget-container a[class*="ticket"]:hover {
+  background: rgba(255, 0, 0, 0.2) !important;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6) !important;
+  transform: scale(1.05) !important;
+}
+
+/* If widget renders a table, remove default spacing so our card styles apply cleanly. */
+.tour2-page #tourDatesList #bit-events {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+.tour2-page #tourDatesList #bit-events th,
+.tour2-page #tourDatesList #bit-events td {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
 }
 
 /* ============================================
