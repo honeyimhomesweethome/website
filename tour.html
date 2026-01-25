@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
+<body class="tour2-page">
   <div class="content">
     <div class="wrap">
       <!-- VHS frame -->
@@ -59,7 +59,78 @@
         <div class="content" id="pageContent">
           <div class="tour-container">
             <h1 class="tour-title">TOUR DATES</h1>
-            <div class="tour-dates-list" id="tourDatesList"></div>
+            <div class="tour-dates-list" id="tourDatesList">
+              <a
+                class="bit-widget-initializer"
+                data-artist-name="id_15580232"
+                data-events-to-display=""
+                data-background-color="rgba(0,0,0,0)"
+                data-separator-color="rgba(217,217,255,0.3)"
+                data-text-color="rgba(217,217,255,1)"
+                data-link-color="rgba(255,0,0,1)"
+                data-link-text-color="rgba(255,0,0,1)"
+                data-font="Inter"
+                data-auto-style="true"
+                data-button-label-capitalization="uppercase"
+                data-header-capitalization="uppercase"
+                data-location-capitalization="uppercase"
+                data-venue-capitalization="uppercase"
+                data-display-logo="false"
+                data-display-track-button="false"
+                data-display-play-my-city="false"
+                data-display-local-dates="false"
+                data-local-dates-position="tab"
+                data-display-past-dates="false"
+                data-display-details="false"
+                data-display-lineup="false"
+                data-display-start-time="false"
+                data-social-share-icon="false"
+                data-display-limit="2"
+                data-date-format="MMM. D, YYYY"
+                data-date-orientation="horizontal"
+                data-date-border-color="rgba(217,217,255,0.3)"
+                data-date-border-width="2px"
+                data-date-capitalization="capitalize"
+                data-date-border-radius="0px"
+                data-event-ticket-cta-size="medium"
+                data-event-custom-ticket-text=""
+                data-event-ticket-text="TICKETS"
+                data-event-ticket-icon="false"
+                data-event-ticket-cta-text-color="rgba(255,0,0,1)"
+                data-event-ticket-cta-bg-color="rgba(0,0,0,0)"
+                data-event-ticket-cta-border-color="rgba(255,0,0,1)"
+                data-event-ticket-cta-border-width="2px"
+                data-event-ticket-cta-border-radius="0px"
+                data-sold-out-button-text-color="rgba(255,255,255,1)"
+                data-sold-out-button-background-color="rgba(74,74,74,1)"
+                data-sold-out-button-border-color="rgba(74,74,74,1)"
+                data-sold-out-button-clickable="true"
+                data-event-rsvp-position="left"
+                data-event-rsvp-cta-size="medium"
+                data-event-rsvp-only-show-icon="false"
+                data-event-rsvp-text=""
+                data-event-rsvp-icon="false"
+                data-event-rsvp-cta-text-color="rgba(74,74,74,1)"
+                data-event-rsvp-cta-bg-color="rgba(255,255,255,1)"
+                data-event-rsvp-cta-border-color="rgba(74,74,74,1)"
+                data-event-rsvp-cta-border-width="1px"
+                data-event-rsvp-cta-border-radius="2px"
+                data-optin-font=""
+                data-optin-text-color=""
+                data-optin-bg-color=""
+                data-optin-cta-text-color=""
+                data-optin-cta-bg-color=""
+                data-optin-cta-border-width=""
+                data-optin-cta-border-radius=""
+                data-optin-cta-border-color=""
+                data-language="en"
+                data-layout-breakpoint="900"
+                data-app-id="8f7549676cf285c0521c766edc26eb6b"
+                data-affil-code=""
+                data-bit-logo-position="bottomRight"
+                data-bit-logo-color="rgba(0,0,0,0)"
+              ></a>
+            </div>
           </div>
         </div>
 
@@ -76,7 +147,7 @@
     </div>
   </div>
 
-  <script src="tour-dates.js"></script>
+  <script charset="utf-8" src="https://widgetv3.bandsintown.com/main.min.js"></script>
   <script>
     // Update date display
     function updateDate() {
@@ -112,65 +183,173 @@
     }
     setActiveNavLink();
 
-    // Display tour dates
-    function displayTourDates() {
-      const container = document.getElementById('tourDatesList');
-      
-      if (!tourDates || tourDates.length === 0) {
-        container.innerHTML = '<p class="no-dates">No upcoming dates</p>';
-        return;
-      }
-
-      // Sort dates chronologically
-      const sortedDates = [...tourDates].sort((a, b) => 
-        new Date(a.date) - new Date(b.date)
-      );
-
-      container.innerHTML = sortedDates.map(date => {
-        const formattedDate = formatDate(date.date);
-        return `
-          <div class="tour-date-item">
-            <div class="tour-date-info">
-              <span class="tour-date">${formattedDate}</span>
-              <span class="tour-venue">${date.venue}</span>
-              <span class="tour-city">${date.city}</span>
-            </div>
-            <a href="${date.link}" target="_blank" class="tour-link">TICKETS</a>
-          </div>
-        `;
-      }).join('');
+    function hmhExtractFirstMatch(text, regex) {
+      if (!text) return '';
+      const match = text.match(regex);
+      return match ? match[0].trim() : '';
     }
 
-    // Load tour dates when page loads
-    window.addEventListener('load', function() {
-      displayTourDates();
+    function hmhPickText(el) {
+      return el ? (el.textContent || '').trim() : '';
+    }
+
+    function hmhFindTicketLink(row) {
+      const clickable = Array.from(row.querySelectorAll('a, button'));
+      const ticketCandidate = clickable.find(el => /tickets/i.test((el.textContent || '').trim()));
+      if (!ticketCandidate) return null;
+      if (ticketCandidate.tagName === 'A' && ticketCandidate.getAttribute('href')) return ticketCandidate;
+      return ticketCandidate.closest('a[href]') || null;
+    }
+
+    function hmhGetEventRows(widgetRoot) {
+      return widgetRoot.querySelectorAll(
+        '.bit-event, .bit-event-row, .bit-event-item, #bit-events tbody tr, #bit-events tr'
+      );
+    }
+
+    function hmhDeriveEventFields(row) {
+      // Best-effort selectors (widget versions differ).
+      const dateEl =
+        row.querySelector('.bit-date, [class*="date"]') ||
+        row.querySelector('time');
+      const venueEl = row.querySelector('.bit-venue, [class*="venue"]');
+      const cityEl = row.querySelector('.bit-location, [class*="location"], [class*="city"]');
+
+      const rowText = (row.textContent || '').replace(/\s+/g, ' ').trim();
+
+      // If the widget doesn't expose reliable nodes, fall back to pattern matching.
+      const dateText =
+        hmhPickText(dateEl) ||
+        hmhExtractFirstMatch(rowText, /\b[A-Z][a-z]{2}\.\s?\d{1,2},\s?\d{4}\b/) ||
+        hmhExtractFirstMatch(rowText, /\b[A-Z][a-z]{2}\s?\d{1,2},\s?\d{4}\b/) ||
+        '';
+
+      const venueText = hmhPickText(venueEl);
+      const cityText = hmhPickText(cityEl);
+
+      return { dateText, venueText, cityText };
+    }
+
+    function hmhRenderTourDatesFromWidget() {
+      const host = document.getElementById('tourDatesList');
+      if (!host) return false;
+
+      const widgetContainer = host.querySelector('.bit-widget-container') || host.querySelector('#bit-events');
+      if (!widgetContainer) return false;
+
+      const rows = Array.from(hmhGetEventRows(widgetContainer));
+      if (rows.length === 0) return false;
+
+      const rendered = document.createElement('div');
+      rendered.id = 'hmhTourDatesRendered';
+      rendered.className = 'tour-dates-list';
+
+      let added = 0;
+
+      for (const row of rows) {
+        const ticketLink = hmhFindTicketLink(row);
+        if (!ticketLink) continue;
+
+        const { dateText, venueText, cityText } = hmhDeriveEventFields(row);
+
+        const item = document.createElement('div');
+        item.className = 'tour-date-item';
+
+        const info = document.createElement('div');
+        info.className = 'tour-date-info';
+
+        if (dateText) {
+          const dateSpan = document.createElement('span');
+          dateSpan.className = 'tour-date';
+          dateSpan.textContent = dateText;
+          info.appendChild(dateSpan);
+        }
+
+        if (venueText) {
+          const venueSpan = document.createElement('span');
+          venueSpan.className = 'tour-venue';
+          venueSpan.textContent = venueText;
+          info.appendChild(venueSpan);
+        }
+
+        if (cityText) {
+          const citySpan = document.createElement('span');
+          citySpan.className = 'tour-city';
+          citySpan.textContent = cityText;
+          info.appendChild(citySpan);
+        }
+
+        const btn = document.createElement('a');
+        btn.className = 'tour-link';
+        btn.target = '_blank';
+        btn.rel = 'noopener noreferrer';
+        btn.href = ticketLink.href;
+        btn.textContent = 'TICKETS';
+
+        item.appendChild(info);
+        item.appendChild(btn);
+        rendered.appendChild(item);
+        added += 1;
+      }
+
+      if (added === 0) return false;
+
+      const existing = host.querySelector('#hmhTourDatesRendered');
+      if (existing) existing.remove();
+
+      const initializer = host.querySelector('.bit-widget-initializer');
+      if (initializer) initializer.style.display = 'none';
+
+      const widgetWrapper = host.querySelector('.bit-widget-container') || host.querySelector('#bit-events');
+      if (widgetWrapper) widgetWrapper.style.display = 'none';
+
+      host.appendChild(rendered);
+      return true;
+    }
+
+    window.addEventListener('load', function () {
+      hmhRenderTourDatesFromWidget();
+
+      const host = document.getElementById('tourDatesList');
+      if (!host) return;
+
+      const observer = new MutationObserver(() => {
+        if (hmhRenderTourDatesFromWidget()) {
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(host, { childList: true, subtree: true });
+
+      let tries = 0;
+      const interval = setInterval(() => {
+        tries += 1;
+        const done = hmhRenderTourDatesFromWidget();
+        if (done || tries >= 20) clearInterval(interval);
+      }, 250);
     });
 
-    // Navigation with VHS transition
     document.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', function (e) {
         e.preventDefault();
         const targetUrl = this.getAttribute('href');
 
         if (targetUrl === '#' || targetUrl === window.location.pathname.split('/').pop()) {
-          return; // Don't transition if clicking current page or placeholder
+          return;
         }
 
         const overlay = document.getElementById('transitionOverlay');
 
-        // Fade out with snow effect
         overlay.classList.add('active');
 
         setTimeout(() => {
-          // Navigate to new page after transition
           if (targetUrl) {
             window.location.href = targetUrl;
           }
-        }, 1500); // Match transition duration
+        }, 1500);
       });
     });
 
-    // Fade in on page load
     window.addEventListener('load', function () {
       const overlay = document.getElementById('transitionOverlay');
       overlay.classList.add('fade-in');
@@ -179,7 +358,6 @@
       }, 1500);
     });
 
-    // Mobile hamburger menu toggle
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('navLinks');
     
@@ -189,7 +367,6 @@
         navLinks.classList.toggle('active');
       });
 
-      // Close menu when clicking a nav link on mobile
       document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function() {
           hamburger.classList.remove('active');
