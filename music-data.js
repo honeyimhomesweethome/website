@@ -18,6 +18,18 @@ const musicReleases = [
     spotifyLink: 'https://found.ee/honeyimhome_insecure',
     releaseDate: '2025-10-24'
   },
+  {
+    title: 'Pretty',
+    artwork: 'images/pretty.jpg',
+    spotifyLink: 'https://found.ee/honeyimhome_pretty',
+    releaseDate: '2026-02-18'
+  },
+  {
+    title: 'Hyperspace Mountain',
+    artwork: 'images/hyperspace-mountain.jpg',
+    spotifyLink: 'https://found.ee/honeyimhome_hyperspacemountain',
+    releaseDate: '2026-04-01'
+  },
 ];
 
 // Format date for display
