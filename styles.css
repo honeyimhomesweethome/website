@@ -167,7 +167,7 @@ body {
   }
 }
 
-/* Override alignment for tour, music, about, and contact pages */
+.site-page .vhs .content,
 .vhs .content:has(.tour-container),
 .vhs .content:has(.music-container),
 .vhs .content:has(.shop-container),
@@ -177,10 +177,12 @@ body {
   padding-top: 100px;
 }
 
-/* Mobile: reduce top padding */
-@media (max-width: 600px) {
+/* Mobile: reduce top padding and keep titles aligned under REC/hamburger */
+@media (max-width: 768px) {
+  .site-page .vhs .content,
   .vhs .content:has(.tour-container),
   .vhs .content:has(.music-container),
+  .vhs .content:has(.shop-container),
   .vhs .content:has(.about-container),
   .vhs .content:has(.contact-container) {
     padding-top: 10px;
@@ -836,6 +838,16 @@ body {
   margin: 0;
 }
 
+@media (max-width: 768px) {
+  .tour-container,
+  .music-container,
+  .shop-container,
+  .about-container,
+  .contact-container {
+    padding-top: 50px;
+  }
+}
+
 .contact-content {
   width: 100%;
   display: flex;
@@ -1298,7 +1310,7 @@ body {
    Date Display
    ============================================ */
 .date-display {
-  position: absolute;
+  position: fixed;
   bottom: 20px;
   left: 20px;
   color: #fff;
