@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music - Honey I'm Home</title>
+  <title>Shop - Honey I'm Home</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -29,9 +29,9 @@
 
         <!-- Content -->
         <div class="content" id="pageContent">
-          <div class="music-container">
-            <h1 class="music-title">MUSIC</h1>
-            <div class="music-releases-list" id="musicReleasesList"></div>
+          <div class="shop-container">
+            <h1 class="shop-title">SHOP</h1>
+            <div class="shop-products-list" id="shopProductsList"></div>
           </div>
         </div>
 
@@ -77,9 +77,8 @@
     </div>
   </div>
 
-  <script src="music-data.js"></script>
+  <script src="shop-data.js"></script>
   <script>
-    // Update date display
     function updateDate() {
       const now = new Date();
       const options = {
@@ -95,11 +94,9 @@
       document.getElementById('dateDisplay').textContent = dateString;
     }
 
-    // Update immediately and then every second
     updateDate();
     setInterval(updateDate, 1000);
 
-    // Mark active nav link
     function setActiveNavLink() {
       const currentPage = window.location.pathname.split('/').pop() || 'index.html';
       document.querySelectorAll('.nav-link').forEach(link => {
@@ -113,69 +110,67 @@
     }
     setActiveNavLink();
 
-    // Display music releases
-    function displayMusicReleases() {
-      const container = document.getElementById('musicReleasesList');
-      
-      if (!musicReleases || musicReleases.length === 0) {
-        container.innerHTML = '<p class="no-releases">No releases available</p>';
+    function renderBuyAction(product) {
+      if (product.soldOut) {
+        return '<span class="shop-link shop-link-unavailable">SOLD OUT</span>';
+      }
+      if (product.buyLink) {
+        const label = product.buyLabel || 'BUY NOW';
+        return `<a href="${product.buyLink}" target="_blank" rel="noopener noreferrer" class="shop-link">${label}</a>`;
+      }
+      return '<span class="shop-link shop-link-unavailable">COMING SOON</span>';
+    }
+
+    function displayShopProducts() {
+      const container = document.getElementById('shopProductsList');
+
+      if (!shopProducts || shopProducts.length === 0) {
+        container.innerHTML = '<p class="no-shop-products">Nothing in the shop yet</p>';
         return;
       }
 
-      // Sort releases by release date (newest first)
-      const sortedReleases = [...musicReleases].sort((a, b) => {
-        const dateA = a.releaseDate ? new Date(a.releaseDate) : new Date(0);
-        const dateB = b.releaseDate ? new Date(b.releaseDate) : new Date(0);
-        return dateB - dateA; // Descending order (newest first)
-      });
-
-      container.innerHTML = sortedReleases.map(release => {
-        const releaseDate = release.releaseDate ? formatReleaseDate(release.releaseDate) : '';
+      container.innerHTML = shopProducts.map(product => {
         return `
-          <div class="music-release-item">
-            <div class="music-artwork">
-              <img src="${release.artwork}" alt="${release.title}" />
+          <div class="shop-product-item">
+            <div class="shop-product-image">
+              <img src="${product.image}" alt="${product.title}" />
             </div>
-            <div class="music-info">
-              <h2 class="music-release-title">${release.title}</h2>
-              ${releaseDate ? `<p class="music-release-date">${releaseDate}</p>` : ''}
-              <a href="${release.spotifyLink}" target="_blank" class="music-link">STREAM HERE</a>
+            <div class="shop-product-info">
+              <h2 class="shop-product-title">${product.title}</h2>
+              ${product.subtitle ? `<p class="shop-product-subtitle">${product.subtitle}</p>` : ''}
+              ${product.description ? `<p class="shop-product-description">${product.description}</p>` : ''}
+              ${product.price ? `<p class="shop-product-price">${product.price}</p>` : ''}
+              ${renderBuyAction(product)}
             </div>
           </div>
         `;
       }).join('');
     }
 
-    // Load music releases when page loads
     window.addEventListener('load', function() {
-      displayMusicReleases();
+      displayShopProducts();
     });
 
-    // Navigation with VHS transition
     document.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', function (e) {
         e.preventDefault();
         const targetUrl = this.getAttribute('href');
 
         if (targetUrl === '#' || targetUrl === window.location.pathname.split('/').pop()) {
-          return; // Don't transition if clicking current page or placeholder
+          return;
         }
 
         const overlay = document.getElementById('transitionOverlay');
-
-        // Fade out with snow effect
         overlay.classList.add('active');
 
         setTimeout(() => {
-          // Navigate to new page after transition
           if (targetUrl) {
             window.location.href = targetUrl;
           }
-        }, 1500); // Match transition duration
+        }, 1500);
       });
     });
 
-    // Fade in on page load
     window.addEventListener('load', function () {
       const overlay = document.getElementById('transitionOverlay');
       overlay.classList.add('fade-in');
@@ -184,7 +179,6 @@
       }, 1500);
     });
 
-    // Mobile hamburger menu toggle
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('navLinks');
     
@@ -194,7 +188,6 @@
         navLinks.classList.toggle('active');
       });
 
-      // Close menu when clicking a nav link on mobile
       document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function() {
           hamburger.classList.remove('active');
