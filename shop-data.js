@@ -1,7 +1,7 @@
 // Shop products — add new items here (vinyl, merch, etc.)
 const shopProducts = [
   {
-    title: 'Hyperspace Mountain / Sign of the Times',
+    title: '7" Vinyl · Hyperspace Mountain / Sign of the Times',
     subtitle: 'Paradiso Vinyl Club · 7" Double Single',
     description: 'Exclusive release featuring "Hyperspace Mountain" and "Sign of the Times".',
     image: 'images/paradiso-vinyl-club-7.jpg',
