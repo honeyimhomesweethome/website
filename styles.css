@@ -167,26 +167,19 @@ body {
   }
 }
 
-/* Override alignment for interior pages (tour, music, shop, about, contact) */
-.site-page .vhs .content,
+/* Override alignment for tour, music, shop, about, and contact pages */
 .vhs .content:has(.tour-container),
 .vhs .content:has(.music-container),
 .vhs .content:has(.shop-container),
 .vhs .content:has(.about-container),
 .vhs .content:has(.contact-container) {
-  align-items: flex-start;
-  justify-content: flex-start;
+  display: block;
   padding-top: 100px;
-  /* Reset hero-sized defaults so page content matches across interior pages */
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: normal;
-  text-shadow: none;
+  text-align: center;
 }
 
-/* Mobile: reduce top padding and keep titles aligned under REC/hamburger */
-@media (max-width: 768px) {
-  .site-page .vhs .content,
+/* Mobile: reduce top padding */
+@media (max-width: 600px) {
   .vhs .content:has(.tour-container),
   .vhs .content:has(.music-container),
   .vhs .content:has(.shop-container),
@@ -199,6 +192,15 @@ body {
 /* Extra bottom padding for about page */
 .vhs .content:has(.about-container) {
   padding-bottom: 20px;
+}
+
+.tour-container,
+.music-container,
+.shop-container,
+.about-container,
+.contact-container {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ============================================
@@ -230,6 +232,10 @@ body {
   flex-direction: column;
   gap: 30px;
   padding-bottom: 80px;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-shadow: none;
 }
 
 .tour-date-item {
@@ -714,16 +720,6 @@ body {
   color: #d9d9ff;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
   margin: 0;
-}
-
-@media (max-width: 768px) {
-  .tour-container,
-  .music-container,
-  .shop-container,
-  .about-container,
-  .contact-container {
-    padding-top: 50px;
-  }
 }
 
 .contact-content {
